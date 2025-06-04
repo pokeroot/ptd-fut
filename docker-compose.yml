@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports: # Opcional: exponer puerto de DB para acceso local si es necesario para debugging
+      - "5432:5432"
+    networks:
+      - pizarra_net
+
+  backend:
+    build: ./pizarra_tactica_project
+    # command: python manage.py runserver 0.0.0.0:8000 # Para desarrollo con auto-reload de Django
+    command: gunicorn --workers 2 --bind 0.0.0.0:8000 pizarra_tactica_project.wsgi:application # Para un entorno más parecido a producción
+    volumes:
+      - ./pizarra_tactica_project:/app # Montar código para desarrollo
+      # - static_volume:/app/staticfiles # Si se usa collectstatic y Nginx externo al contenedor de Django
+    ports: # Exponer puerto de backend para acceso directo (opcional, Nginx es el entrypoint)
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - POSTGRES_NAME=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=${DB_HOST} # db (nombre del servicio de la base de datos)
+      - DB_PORT=${DB_PORT} # 5432
+      # Asegúrate que Django settings.py usa estas variables para la conexión a la BD
+    depends_on:
+      - db
+    networks:
+      - pizarra_net
+
+  frontend:
+    build:
+      context: ./frontend
+      # Opcional: pasar args en tiempo de build para variables de entorno de React
+      # args:
+      #   - REACT_APP_API_URL=/api
+    ports:
+      - "80:80" # Puerto HTTP estándar para Nginx
+      # - "3000:80" # Alternativa si el puerto 80 local está ocupado
+    depends_on:
+      - backend
+    networks:
+      - pizarra_net
+    # Para desarrollo con hot-reloading de React, se necesitaría una configuración diferente:
+    # build:
+    #   context: ./frontend
+    #   dockerfile: Dockerfile.dev # Un Dockerfile específico para desarrollo
+    # command: npm start
+    # volumes:
+    #   - ./frontend:/app
+    #   - /app/node_modules # Evitar que node_modules local sobreescriba el del contenedor
+    # environment:
+    #   - CHOKIDAR_USEPOLLING=true # Para hot-reloading en algunos entornos Docker
+    #   - REACT_APP_API_URL=/api # O http://localhost:8000/api si se accede al backend por su puerto expuesto
+
+volumes:
+  postgres_data:
+  # static_volume: # Si se usa collectstatic y Nginx sirve desde un volumen compartido
+
+networks:
+  pizarra_net:
+    driver: bridge

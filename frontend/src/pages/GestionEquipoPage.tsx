@@ -20,15 +20,16 @@ const GestionEquipoPage: React.FC = () => {
       const equiposData = await getMisEquipos();
       setMisEquipos(equiposData);
       if (user.rol === 'entrenador' && equiposData.length > 0) {
-        // Si es entrenador y tiene equipo, cargar detalles del primer equipo
+        // Siempre cargar detalles del primer (y único para MVP) equipo del entrenador
         const detalles = await getEquipoDetalle(equiposData[0].id);
         setEquipoSeleccionado(detalles);
-      } else if (equiposData.length > 0) {
-        // Si es jugador y pertenece a equipos, puede seleccionar uno para ver (si se implementa)
-        // Por ahora, solo listamos los equipos a los que pertenece.
+      } else if (user.rol === 'entrenador') {
+        setEquipoSeleccionado(null); // No hay equipo, limpiar selección
       }
+      // Para jugadores, misEquipos es suficiente por ahora.
     } catch (err: any) {
       setError(err.response?.data?.detail || err.message || 'Error al cargar equipos.');
+      console.error("Error en cargarEquipos:", err);
     } finally {
       setIsLoading(false);
     }

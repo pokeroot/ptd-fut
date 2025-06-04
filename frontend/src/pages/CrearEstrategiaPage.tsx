@@ -202,9 +202,24 @@ const CrearEstrategiaPage: React.FC = () => {
     // Allow selection even in read-only for potential inspection, but not modification tools
     if (herramientaActual === 'seleccion') setElementoSeleccionadoId(id);
   };
-  const handleEditarTextoFicha = (id: string) => { if (isReadOnly) return; /* ... */
+  const handleEditarTextoFicha = (id: string) => {
+    if (isReadOnly) return;
     const ficha = elementos.find(el => el.id === id && el.type === 'ficha');
-    if (ficha) { const nuevoTexto = prompt("Número o inicial:", ficha.text); if (nuevoTexto !== null && nuevoTexto.length <= 2) setElementos(prev => prev.map(el => el.id === id ? { ...el, text: nuevoTexto.toUpperCase() } : el)); else if (nuevoTexto !== null) alert("Máx 2 caracteres.");}
+    if (ficha) {
+        const nuevoTexto = prompt("Número o inicial para la ficha (máx. 2 caracteres):", ficha.text || "");
+        if (nuevoTexto === null) { // Usuario canceló
+            return;
+        }
+        if (nuevoTexto.trim() === "") { // Texto vacío no permitido (o mantener el anterior)
+            alert("El texto no puede estar vacío.");
+            return;
+        }
+        if (nuevoTexto.length <= 2) {
+            setElementos(prev => prev.map(el => el.id === id ? { ...el, text: nuevoTexto.toUpperCase() } : el));
+        } else {
+            alert("El texto debe tener máximo 2 caracteres.");
+        }
+    }
   };
   const eliminarElementoSeleccionado = () => { if (isReadOnly) return; /* ... */
     if (elementoSeleccionadoId) { setElementos(prev => prev.filter(el => el.id !== elementoSeleccionadoId)); setElementoSeleccionadoId(null); } else alert("Selecciona un elemento.");

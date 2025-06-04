@@ -172,3 +172,106 @@ Las contribuciones son bienvenidas. Por favor, abre un issue para discutir cambi
 ## Licencia
 
 Este proyecto se distribuye bajo la Licencia MIT. Ver el archivo \`LICENSE\` para más detalles (actualmente no existe, se podría añadir).
+
+## Despliegue con Docker (Entorno de Desarrollo/Prueba)
+
+Esta aplicación está configurada para ejecutarse en contenedores Docker usando Docker Compose.
+
+### Requisitos Previos para Docker
+
+*   Docker Engine (v20.10 o superior)
+*   Docker Compose (v1.29 o superior, o \`docker compose\` v2.x)
+
+### Configuración
+
+1.  **Clonar el repositorio (si aún no lo has hecho):**
+    \`\`\`bash
+    git clone <URL_DEL_REPOSITORIO>
+    cd <NOMBRE_DEL_REPOSITORIO>
+    \`\`\`
+
+2.  **Crear archivo de variables de entorno:**
+    Copia el archivo \`.env.example\` a \`.env\`:
+    \`\`\`bash
+    cp .env.example .env
+    \`\`\`
+    Revisa y ajusta las variables en \`.env\` según sea necesario, especialmente \`SECRET_KEY\` para Django. Los valores por defecto deberían funcionar para un entorno local.
+
+3.  **Asegurar que Django use las variables de entorno para la base de datos:**
+    Modifica el archivo \`pizarra_tactica_project/pizarra_tactica_project/settings.py\` para que la configuración de la base de datos utilice las variables de entorno:
+    \`\`\`python
+    # settings.py
+
+    import os
+    from dotenv import load_dotenv
+    from pathlib import Path # Asegúrate que Path está importado
+
+    # Cargar variables de .env si existe (para desarrollo local fuera de Docker o para referencia)
+    # Docker Compose inyectará las variables de .env directamente.
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    load_dotenv(os.path.join(BASE_DIR.parent, '.env')) # Asumiendo que .env está en la raíz del proyecto
+
+    # ... (otras configuraciones) ...
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('POSTGRES_NAME', 'pizarra_tactica_db'),
+            'USER': os.environ.get('POSTGRES_USER', 'pizarra_user'),
+            'HOST': os.environ.get('DB_HOST', 'db'), # 'db' es el nombre del servicio PostgreSQL en docker-compose
+            'PORT': os.environ.get('DB_PORT', '5432'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'pizarra_pass'),
+        }
+    }
+    \`\`\`
+    **Nota:** Asegúrate de tener \`python-dotenv\` en tu \`requirements.txt\` si quieres que \`load_dotenv\` funcione al correr Django fuera de Docker. Dentro de Docker, Docker Compose se encarga de las variables de entorno. También necesitarás \`psycopg2-binary\` en \`requirements.txt\` para PostgreSQL.
+
+### Ejecutar la Aplicación con Docker Compose
+
+1.  **Construir y levantar los contenedores:**
+    Desde la raíz del proyecto (donde está \`docker-compose.yml\`):
+    \`\`\`bash
+    docker-compose up --build -d
+    \`\`\`
+    El parámetro \`-d\` ejecuta los contenedores en segundo plano (detached mode). Omítelo si quieres ver los logs en la terminal.
+    La primera vez, la construcción de las imágenes puede tardar unos minutos.
+
+2.  **Acceder a la Aplicación:**
+    *   Frontend: Abre tu navegador y ve a \`http://localhost\` (o \`http://localhost:PUERTO_NGINX\` si cambiaste el puerto en \`docker-compose.yml\`).
+    *   Backend API (opcional, para pruebas directas): \`http://localhost:8000/api/\` (si el puerto 8000 del backend está expuesto).
+
+3.  **Ejecutar migraciones de Django (si es la primera vez o hay nuevas migraciones):**
+    \`\`\`bash
+    docker-compose exec backend python manage.py migrate
+    \`\`\`
+
+4.  **Crear un superusuario Django (opcional):**
+    \`\`\`bash
+    docker-compose exec backend python manage.py createsuperuser
+    \`\`\`
+
+5.  **Ver logs:**
+    \`\`\`bash
+    docker-compose logs -f # Para ver logs de todos los servicios
+    docker-compose logs -f backend # Para ver logs solo del backend
+    \`\`\`
+
+6.  **Detener la aplicación:**
+    \`\`\`bash
+    docker-compose down
+    \`\`\`
+    Para detener y eliminar los contenedores. Si quieres eliminar también los volúmenes (¡cuidado, esto borra los datos de la BD!):
+    \`\`\`bash
+    docker-compose down -v
+    \`\`\`
+
+### Consideraciones para Producción
+
+*   El archivo \`docker-compose.yml\` proporcionado está orientado al desarrollo. Para producción:
+    *   Asegúrate que \`DEBUG=0\` en Django.
+    *   Usa una \`SECRET_KEY\` fuerte y única.
+    *   No montes volúmenes de código fuente directamente en los contenedores de backend y frontend. Las imágenes deben ser autocontenidas.
+    *   Maneja los archivos estáticos de Django (\`collectstatic\`) de forma adecuada, sirviéndolos a través de Nginx (posiblemente desde un volumen compartido o copiándolos a la imagen de Nginx del frontend si Nginx también sirve los estáticos de Django Admin).
+    *   Configura HTTPS (SSL/TLS), preferiblemente en un proxy inverso delante de Nginx (como Traefik, o Nginx mismo si se configura para ello).
+    *   Considera usar un \`docker-compose.prod.yml\` que sobreescriba o extienda la configuración base para producción.
+    *   Gestiona los secretos (contraseñas, claves API) de forma segura (ej. Docker secrets, variables de entorno inyectadas por el sistema de orquestación).
