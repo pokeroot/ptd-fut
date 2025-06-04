@@ -1,0 +1,8 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="400" style="fill:darkgreen;stroke-width:3;stroke:white" />
+  <circle cx="300" cy="200" r="50" stroke="white" stroke-width="2" fill="none" />
+  <line x1="300" y1="0" x2="300" y2="400" style="stroke:white;stroke-width:2" />
+  <rect x="0" y="100" width="80" height="200" style="fill:none;stroke-width:2;stroke:white" />
+  <rect x="520" y="100" width="80" height="200" style="fill:none;stroke-width:2;stroke:white" />
+  <text x="10" y="20" fill="white">Fútbol 7</text>
+</svg>
