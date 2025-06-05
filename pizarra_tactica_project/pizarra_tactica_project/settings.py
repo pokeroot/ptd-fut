@@ -121,8 +121,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://192.168.20.71',
+]
 CORS_ALLOW_CREDENTIALS = True
+
+# CSRF_TRUSTED_ORIGINS es importante para permitir peticiones POST/PUT/PATCH desde orígenes externos
+# especialmente si estás usando session-based authentication o cookies CSRF.
+# Para APIs basadas en tokens (como JWT), esto podría no ser estrictamente necesario si las cookies CSRF no se usan para autenticación.
+# Sin embargo, incluirlo es una buena práctica para cubrir todos los casos.
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000', # Si tu frontend también puede ser servido desde localhost para Django
+    'http://192.168.20.71',
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
