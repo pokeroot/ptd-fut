@@ -168,7 +168,8 @@ const CrearEstrategiaPage: React.FC = () => {
         const { fichasLocal, fichasVisitante } = getCounts(); const playerType = herramientaActual === 'ficha_local' ? 'local' : 'visitante';
         const limite = campoSeleccionado.limiteFichasPorEquipo;
         if ((playerType === 'local' && fichasLocal >= limite) || (playerType === 'visitante' && fichasVisitante >= limite)) { alert('Límite de \${limite} fichas... '); return; }
-        const nuevaFicha: ElementoTablero = { id: Konva.Util.getRandomColor(), x, y, type: 'ficha', radius: 10, fill: playerType === 'local' ? 'red' : 'blue', stroke: 'white', strokeWidth: 1, text: '\${playerType === 'local' ? fichasLocal + 1 : fichasVisitante + 1} ', fontSize: 10, playerType, };
+        const nuevaFicha: ElementoTablero = { id: Konva.Util.getRandomColor(), x, y, type: 'ficha', radius: 10, fill: playerType === 'local' ? 'red' : 'blue', stroke: 'white', strokeWidth: 1, text: `${playerType === 'local' ? fichasLocal + 1 : fichasVisitante + 1}`, fontSize: 10, playerType };
+
         setElementos(prev => [...prev, nuevaFicha]);
     } else if (herramientaActual === 'balon') { /* ... */
         const { balonExiste } = getCounts(); if (balonExiste) { alert("Solo un balón..."); return; }
