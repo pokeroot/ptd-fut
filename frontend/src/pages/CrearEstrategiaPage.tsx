@@ -157,7 +157,7 @@ const CrearEstrategiaPage: React.FC = () => {
 
   // Lógica del tablero (Stage MouseDown, Move, Up, DragEnd, ElementoClick, EditarTextoFicha, Eliminar, Limpiar)
   // Estas funciones deben respetar 'isReadOnly'
-  const handleStageMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
+  const handleStageMouseDown = (e: Konva.KonvaEventObject<MouseEvent | TouchEvent>) => {
     if (isReadOnly || !campoSeleccionado) return;
     // ... resto de la lógica de mousedown (sin cambios funcionales mayores)
     if (e.target !== e.target.getStage()) return;
@@ -181,13 +181,13 @@ const CrearEstrategiaPage: React.FC = () => {
         const texto = prompt("Introduce la nota:"); if (texto) { const nuevaNota: ElementoTablero = { id: Konva.Util.getRandomColor(), x, y, type: 'texto_nota', textValue: texto, fontSize: 12, fill: colorHerramienta, }; setElementos(prev => [...prev, nuevaNota]); }
     }
   };
-  const handleStageMouseMove = (e: Konva.KonvaEventObject<MouseEvent>) => { if (isReadOnly || !dibujando || !puntosActuales.length) return; /* ... */
+  const handleStageMouseMove = (e: Konva.KonvaEventObject<MouseEvent | TouchEvent>) => { if (isReadOnly || !dibujando || !puntosActuales.length) return; /* ... */
     const pos = e.target.getStage()?.getPointerPosition(); if (!pos) return;
     const x = pos.x / scale; const y = pos.y / scale;
     if (herramientaActual === 'linea' || herramientaActual === 'flecha') { setPuntosActuales([puntosActuales[0], puntosActuales[1], x, y]); }
     else if (herramientaActual === 'rect_zona' || herramientaActual === 'circ_zona') { setPuntosActuales([puntosActuales[0], puntosActuales[1], x, y]); }
   };
-  const handleStageMouseUp = () => { if (isReadOnly || !dibujando || !puntosActuales.length || !campoSeleccionado) return; /* ... */
+  const handleStageMouseUp = (_e: Konva.KonvaEventObject<MouseEvent | TouchEvent>) => { if (isReadOnly || !dibujando || !puntosActuales.length || !campoSeleccionado) return; /* ... */
     setDibujando(false); const id = Konva.Util.getRandomColor(); let nuevoElemento: ElementoTablero | null = null;
     if (herramientaActual === 'linea') nuevoElemento = { id, x:0, y:0, type: 'linea', points: puntosActuales, stroke: colorHerramienta, strokeWidth: grosorHerramienta };
     else if (herramientaActual === 'flecha') nuevoElemento = { id, x:0, y:0, type: 'flecha', points: puntosActuales, stroke: colorHerramienta, fill: colorHerramienta, strokeWidth: grosorHerramienta };
