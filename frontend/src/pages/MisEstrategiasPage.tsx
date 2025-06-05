@@ -52,7 +52,7 @@ const MisEstrategiasPage: React.FC = () => {
     setIsLoading(true); setError(null); setMensaje(null);
     try {
       const actualizada = await actualizarEstadoCompartirEstrategia(estrategia.id!, !estrategia.compartida_con_equipo);
-      setMensaje(\`Estrategia "\${actualizada.nombre}" ahora está \${actualizada.compartida_con_equipo ? "compartida" : "no compartida"}. \`);
+      setMensaje('Estrategia "\${actualizada.nombre}" ahora está \${actualizada.compartida_con_equipo ? "compartida" : "no compartida"}. ');
       // Actualizar la lista localmente para reflejar el cambio inmediatamente
       setEstrategias(prev => prev.map(e => e.id === actualizada.id ? actualizada : e));
     } catch (err: any) {
@@ -90,7 +90,7 @@ const MisEstrategiasPage: React.FC = () => {
                   <button onClick={() => handleToggleCompartir(est)} style={{ marginRight: '10px' }} disabled={isLoading}>
                     {est.compartida_con_equipo ? 'Dejar de Compartir' : 'Compartir con Equipo'}
                   </button>
-                  <button onClick={() => navigate(\`/crear-estrategia/\${est.id} \`)} style={{ marginRight: '10px' }} disabled={isLoading}>
+                  <button onClick={() => navigate('/crear-estrategia/\${est.id} ')} style={{ marginRight: '10px' }} disabled={isLoading}>
                     Ver/Editar
                   </button>
                   <button onClick={() => handleEliminarEstrategia(est.id!)} style={{ background: 'red' }} disabled={isLoading}>
