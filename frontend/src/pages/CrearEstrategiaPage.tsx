@@ -167,8 +167,8 @@ const CrearEstrategiaPage: React.FC = () => {
     if (herramientaActual === 'ficha_local' || herramientaActual === 'ficha_visitante') { /* ... */
         const { fichasLocal, fichasVisitante } = getCounts(); const playerType = herramientaActual === 'ficha_local' ? 'local' : 'visitante';
         const limite = campoSeleccionado.limiteFichasPorEquipo;
-        if ((playerType === 'local' && fichasLocal >= limite) || (playerType === 'visitante' && fichasVisitante >= limite)) { alert(\`Límite de \${limite} fichas...\`); return; }
-        const nuevaFicha: ElementoTablero = { id: Konva.Util.getRandomColor(), x, y, type: 'ficha', radius: 10, fill: playerType === 'local' ? 'red' : 'blue', stroke: 'white', strokeWidth: 1, text: \`\${playerType === 'local' ? fichasLocal + 1 : fichasVisitante + 1}\`, fontSize: 10, playerType, };
+        if ((playerType === 'local' && fichasLocal >= limite) || (playerType === 'visitante' && fichasVisitante >= limite)) { alert(\`Límite de \${limite} fichas... \`); return; }
+        const nuevaFicha: ElementoTablero = { id: Konva.Util.getRandomColor(), x, y, type: 'ficha', radius: 10, fill: playerType === 'local' ? 'red' : 'blue', stroke: 'white', strokeWidth: 1, text: \`\${playerType === 'local' ? fichasLocal + 1 : fichasVisitante + 1} \`, fontSize: 10, playerType, };
         setElementos(prev => [...prev, nuevaFicha]);
     } else if (herramientaActual === 'balon') { /* ... */
         const { balonExiste } = getCounts(); if (balonExiste) { alert("Solo un balón..."); return; }
@@ -232,7 +232,7 @@ const CrearEstrategiaPage: React.FC = () => {
     let nombreParaGuardar = nombreEstrategia; if (!nombreParaGuardar) { nombreParaGuardar = prompt("Nombre para la estrategia:"); if (!nombreParaGuardar) {setError("Nombre obligatorio."); return;} setNombreEstrategia(nombreParaGuardar); }
     const datosParaGuardar: EstrategiaData = { nombre: nombreParaGuardar, tipo_campo: campoSeleccionado.tipo, datos_estrategia: { elementos: elementos }, equipo: equipoEntrenador.id, };
     setIsLoading(true); setError(null); setMensaje(null);
-    try { const estrategiaGuardada = await guardarEstrategia(datosParaGuardar); setMensaje(\`Estrategia "\${estrategiaGuardada.nombre}" guardada!\`); if (!estrategiaId) navigate(\`/crear-estrategia/\${estrategiaGuardada.id}\`, { replace: true }); fetchComentarios(estrategiaGuardada.id!); /* Recargar comentarios (si es nueva) */ }
+    try { const estrategiaGuardada = await guardarEstrategia(datosParaGuardar); setMensaje(\`Estrategia "\${estrategiaGuardada.nombre}" guardada!\`); if (!estrategiaId) navigate(\`/crear-estrategia/\${estrategiaGuardada.id}\`, { replace: true }); fetchComentarios(estrategiaGuardada.id!); /* Recargar comentarios (nueva) */ }
     catch (err: any) { setError(err.response?.data?.detail || 'Error guardando.'); } finally { setIsLoading(false); }
   };
 
@@ -284,7 +284,7 @@ const CrearEstrategiaPage: React.FC = () => {
 
   return (
     <div>
-      <h2>{isReadOnly ? \`Visualizando Estrategia: \${nombreEstrategia}\` : (estrategiaId ? \`Editando Estrategia: \${nombreEstrategia}\` : "Crear Nueva Estrategia")}</h2>
+      <h2>{isReadOnly ? \`Visualizando Estrategia: \${nombreEstrategia} \` : (estrategiaId ? \`Editando Estrategia: \${nombreEstrategia}\` : "Crear Nueva Estrategia")}</h2>
       {mensaje && <p style={{ color: 'green' }}>{mensaje}</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 

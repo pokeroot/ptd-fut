@@ -8,7 +8,7 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
     if (token) {
-      config.headers['Authorization'] = \` Bearer \${token}\`;
+      config.headers['Authorization'] = \`Bearer \${token}\`;
     }
     return config;
   },
@@ -49,7 +49,7 @@ api.interceptors.response.use(
             case 403: message = "No tienes permiso para realizar esta acción."; break;
             case 404: message = "El recurso solicitado no fue encontrado."; break;
             case 500: message = "Error interno del servidor. Por favor, inténtalo más tarde."; break;
-            default: message = \`Error del servidor: \${error.response.status}. Inténtalo más tarde.\`;
+            default: message = \`Error del servidor: \${error.response.status}. Inténtalo más tarde. \`;
         }
       }
     } else if (error.request) { // La petición se hizo pero no se recibió respuesta (error de red)
