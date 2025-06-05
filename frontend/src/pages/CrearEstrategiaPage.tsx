@@ -230,7 +230,16 @@ const CrearEstrategiaPage: React.FC = () => {
   };
   const handleGuardarEstrategia = async () => { /* ... (sin cambios, ya respeta isLoading) ... */
     if (isReadOnly || !campoSeleccionado || !equipoEntrenador) { setError("No se puede guardar."); return; }
-    let nombreParaGuardar = nombreEstrategia; if (!nombreParaGuardar) { nombreParaGuardar = prompt("Nombre para la estrategia:"); if (!nombreParaGuardar) {setError("Nombre obligatorio."); return;} setNombreEstrategia(nombreParaGuardar); }
+    let nombreParaGuardar = nombreEstrategia;
+    if (!nombreParaGuardar) {
+      const nombrePrompt = prompt("Nombre para la estrategia:");
+      if (nombrePrompt === null || nombrePrompt.trim() === "") {
+        setError("Nombre obligatorio.");
+        return;
+      }
+      nombreParaGuardar = nombrePrompt;
+      setNombreEstrategia(nombreParaGuardar); // Ahora nombreParaGuardar es definitivamente un string
+    }
     const datosParaGuardar: EstrategiaData = { nombre: nombreParaGuardar, tipo_campo: campoSeleccionado.tipo, datos_estrategia: { elementos: elementos }, equipo: equipoEntrenador.id, };
     setIsLoading(true); setError(null); setMensaje(null);
     try { const estrategiaGuardada = await guardarEstrategia(datosParaGuardar); setMensaje('Estrategia "\${estrategiaGuardada.nombre}" guardada!'); if (!estrategiaId) navigate('/crear-estrategia/\${estrategiaGuardada.id}', { replace: true }); fetchComentarios(estrategiaGuardada.id!); /* Recargar comentarios (nueva) */ }
