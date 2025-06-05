@@ -13,6 +13,25 @@ export interface EstrategiaData {
   fecha_modificacion?: string;
 }
 
+export interface ComentarioData {
+  id?: number;
+  estrategia: number;
+  autor_username: string;
+  texto: string;
+  fecha_creacion: string;
+  autor?: number;
+}
+
+export const getComentariosPorEstrategia = async (estrategiaId: number): Promise<ComentarioData[]> => {
+  const response = await api.get<ComentarioData[]>(`/estrategias/${estrategiaId}/comentarios/`);
+  return response.data;
+};
+
+export const addComentarioAEstrategia = async (estrategiaId: number, comentarioData: { texto: string }): Promise<ComentarioData> => {
+  const response = await api.post<ComentarioData>(`/estrategias/${estrategiaId}/comentarios/`, { texto: comentarioData.texto });
+  return response.data;
+};
+
 export const guardarEstrategia = async (datosEstrategia: EstrategiaData): Promise<EstrategiaData> => {
   // Si la estrategia tiene un ID, es una actualización (PATCH o PUT)
   // Por ahora, el PDD dice que la edición es post-MVP, así que solo crearemos nuevas.
