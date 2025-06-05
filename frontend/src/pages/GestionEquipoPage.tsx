@@ -74,7 +74,8 @@ const GestionEquipoPage: React.FC = () => {
       setMensaje(respuesta.mensaje);
       setCodigoParaUnirse('');
       cargarEquipos(); // Recargar la lista de equipos
-    } catch (err: any)      setError(err.response?.data?.error || err.message || 'Error al unirse al equipo.');
+    } catch (err: any) {
+      setError(err.response?.data?.error || err.message || 'Error al unirse al equipo.');
     } finally {
       setIsLoading(false);
     }
