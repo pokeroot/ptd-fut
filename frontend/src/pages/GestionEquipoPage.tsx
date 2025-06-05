@@ -50,7 +50,7 @@ const GestionEquipoPage: React.FC = () => {
     setMensaje(null);
     try {
       const nuevoEquipo = await crearEquipo(nombreNuevoEquipo);
-      setMensaje(\`Equipo "\${nuevoEquipo.nombre}" creado con éxito. Código: \${nuevoEquipo.codigo_equipo}\`);
+      setMensaje(\`Equipo "\${nuevoEquipo.nombre}" creado con éxito. Código: \${nuevoEquipo.codigo_equipo} \`);
       setNombreNuevoEquipo('');
       cargarEquipos(); // Recargar la lista de equipos
     } catch (err: any) {

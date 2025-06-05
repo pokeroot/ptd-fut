@@ -60,7 +60,7 @@ const EstrategiasEquipoPage: React.FC = () => {
                 <br />
                 <small>Compartida por: {est.creador_username || 'Entrenador'}</small>
               </div>
-              <button onClick={() => navigate(\`/visualizar-estrategia/\${est.id}\` )}>
+              <button onClick={() => navigate(\`/visualizar-estrategia/\${est.id}\`)}>
                 Visualizar
               </button>
             </li>
