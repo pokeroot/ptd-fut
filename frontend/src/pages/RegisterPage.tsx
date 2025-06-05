@@ -29,7 +29,7 @@ const RegisterPage: React.FC = () => {
       if (err.response && err.response.data) {
         let errors = '';
         for (const key in err.response.data) {
-          errors += \`\${key}: \${err.response.data[key].join ? err.response.data[key].join(', ') : err.response.data[key]} \n\`;
+          errors += '\${key}: \${err.response.data[key].join ? err.response.data[key].join(', ') : err.response.data[key]} \n';
         }
         setError(errors.trim() || 'Error en el registro.');
       } else {
