@@ -28,15 +28,15 @@ export const getMisEstrategias = async (): Promise<EstrategiaData[]> => {
 };
 
 export const getEstrategiaPorId = async (id: number): Promise<EstrategiaData> => {
-  const response = await api.get<EstrategiaData>(\`/estrategias/\${id}/\`);
+  const response = await api.get<EstrategiaData>(`/estrategias/${id}/`);
   return response.data;
 };
 
 export const deleteEstrategia = async (id: number): Promise<void> => {
-  await api.delete(\`/estrategias/\${id}/\`);
+  await api.delete(`/estrategias/${id}/`);
 };
 
 export const actualizarEstadoCompartirEstrategia = async (id: number, compartida: boolean): Promise<EstrategiaData> => {
-  const response = await api.patch<EstrategiaData>(\`/estrategias/\${id}/\`, { compartida_con_equipo: compartida });
+  const response = await api.patch<EstrategiaData>(`/estrategias/${id}/`, { compartida_con_equipo: compartida });
   return response.data;
 };
