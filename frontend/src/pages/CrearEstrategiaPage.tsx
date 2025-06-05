@@ -252,7 +252,7 @@ const CrearEstrategiaPage: React.FC = () => {
     if (!nuevoComentario.trim() || !estrategiaId) return;
     setIsLoadingComentarios(true);
     try {
-      const comentarioAnadido = await addComentarioAEstrategia(parseInt(estrategiaId, 10), nuevoComentario);
+      const comentarioAnadido = await addComentarioAEstrategia(parseInt(estrategiaId, 10), { texto: nuevoComentario });
       setComentarios(prev => [...prev, comentarioAnadido]); // Añadir a la lista local
       setNuevoComentario(''); // Limpiar input
     } catch (err) {
