@@ -53,11 +53,11 @@ const RegisterPage: React.FC = () => {
         </div>
         <div>
           <label htmlFor="password">Contraseña:</label>
-          <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password" />
         </div>
         <div>
           <label htmlFor="password2">Confirmar Contraseña:</label>
-          <input type="password" id="password2" value={password2} onChange={(e) => setPassword2(e.target.value)} required />
+          <input type="password" id="password2" value={password2} onChange={(e) => setPassword2(e.target.value)} required autoComplete="new-password" />
         </div>
         <div>
           <label htmlFor="rol">Soy un:</label>
