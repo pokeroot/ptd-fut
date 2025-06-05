@@ -22,7 +22,7 @@ export const getMisEquipos = async (): Promise<Equipo[]> => {
 };
 
 export const getEquipoDetalle = async (equipoId: number): Promise<Equipo> => {
-  const response = await api.get<Equipo>(\`/equipos/\${equipoId}/\`);
+  const response = await api.get<Equipo>(`/equipos/\${equipoId}/`);
   return response.data;
 };
 
@@ -32,12 +32,12 @@ export const unirseAEquipo = async (codigoEquipo: string): Promise<{mensaje: str
 };
 
 export const eliminarJugadorDeEquipo = async (equipoId: number, jugadorId: number): Promise<{mensaje: string}> => {
-  const response = await api.post<{mensaje: string}>(\`/equipos/\${equipoId}/gestionar_jugador/\${jugadorId}/\`, {}); // POST para remover
+  const response = await api.post<{mensaje: string}>(`/equipos/\${equipoId}/gestionar_jugador/\${jugadorId}/`, {}); // POST para remover
   return response.data;
 };
 
 // Actualizar nombre del equipo (si es necesario)
 export const actualizarNombreEquipo = async (equipoId: number, nuevoNombre: string): Promise<Equipo> => {
-    const response = await api.patch<Equipo>(\`/equipos/\${equipoId}/\`, { nombre: nuevoNombre });
+    const response = await api.patch<Equipo>(`/equipos/\${equipoId}/`, { nombre: nuevoNombre });
     return response.data;
 };
