@@ -71,7 +71,7 @@ const MisEstrategiasPage: React.FC = () => {
       <h2>Mis Estrategias Guardadas</h2>
       {mensaje && <p style={{color: 'green'}}>{mensaje}</p>}
       <Link to="/crear-estrategia">
-        <button style={{ marginBottom: '20px' }} disabled={isLoading}>Crear Nueva Estrategia</button>
+        <button style={{ marginBottom: '20px'  }} disabled={isLoading}>Crear Nueva Estrategia</button>
       </Link>
       {estrategias.length === 0 ? (
         <p>Aún no has guardado ninguna estrategia.</p>
