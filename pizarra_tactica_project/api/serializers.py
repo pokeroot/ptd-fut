@@ -11,29 +11,22 @@ class UsuarioSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name', 'rol')
         extra_kwargs = {'email': {'required': True}}
 
-
     def create(self, validated_data):
-        print(f"[UsuarioSerializer] Iniciando create. validated_data recibido: {validated_data}")
-
-        rol_data = validated_data.pop('rol', None) 
-        print(f"[UsuarioSerializer] rol_data extraído: {rol_data}")
-        # 'rol' ya fue extraído de validated_data, así que no se pasará a create_user en el siguiente paso.
-
-        print(f"[UsuarioSerializer] validated_data antes de create_user: {validated_data}")
+        # --- INICIO DE LA SECCIÓN CORREGIDA ---
+        # Se extrae el 'rol' de los datos validados.
+        rol_data = validated_data.pop('rol', None)
+        # Se crea el usuario usando el método 'create_user' del manager personalizado.
+        # Este método se encarga de hashear la contraseña automáticamente.
         user = Usuario.objects.create_user(**validated_data)
-        print(f"[UsuarioSerializer] Usuario creado. user.id: {user.id}, user.rol después de create_user (debería ser default): {user.rol}")
-
-        if rol_data:
-            print(f"[UsuarioSerializer] rol_data ('{rol_data}') existe. Aplicando al usuario.")
-            user.rol = rol_data
-            print(f"[UsuarioSerializer] user.rol antes de save(update_fields=['rol']): {user.rol}")
-            user.save(update_fields=['rol'])
-            print(f"[UsuarioSerializer] user.rol después de save(update_fields=['rol']): {user.rol}")
-        else:
-            print(f"[UsuarioSerializer] rol_data no existe o es None. No se actualiza el rol explícitamente. Rol actual: {user.rol}")
         
-        print(f"[UsuarioSerializer] Retornando usuario. user.id: {user.id}, user.rol final: {user.rol}")
+        # Si se proporcionó un rol en la solicitud, se asigna al usuario y se guarda.
+        if rol_data:
+            user.rol = rol_data
+            user.save(update_fields=['rol'])
+        
+        # Se retorna el objeto de usuario creado.
         return user
+        # --- FIN DE LA SECCIÓN CORREGIDA ---
 
 class ComentarioSerializer(serializers.ModelSerializer):
     autor_username = serializers.ReadOnlyField(source='autor.username')

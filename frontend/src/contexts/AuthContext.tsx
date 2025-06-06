@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import { User } from '../types/user';
 import { getUserProfile } from '../services/authService'; // NUEVA IMPORTACIÓN
 // Asegúrate que api service también esté importado si necesitas manejar errores de axios directamente aquí
-// import api from '../services/api'; 
+// import api from '../services/api';
 
 interface AuthContextType {
   user: User | null;
@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(userData); // Establece el usuario con los datos del backend
     } catch (error: any) { // Especificar 'any' o un tipo de error más específico
       console.error('Error al cargar datos del usuario o token inválido:', error);
-      // Si el error es por token inválido (ej. 401), el interceptor de api.ts 
+      // Si el error es por token inválido (ej. 401), el interceptor de api.ts
       // ya podría marcar error.isAuthError = true.
       // O puedes chequear error.response.status === 401 aquí si es necesario.
       localStorage.removeItem('authToken');
