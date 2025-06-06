@@ -13,6 +13,13 @@ class UserCreateView(generics.CreateAPIView):
     serializer_class = UsuarioSerializer
     permission_classes = [permissions.AllowAny]
 
+class UserDetailView(generics.RetrieveAPIView):
+    serializer_class = UsuarioSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
 class EquipoListCreateView(generics.ListCreateAPIView):
     serializer_class = EquipoSerializer
     permission_classes = [permissions.IsAuthenticated]

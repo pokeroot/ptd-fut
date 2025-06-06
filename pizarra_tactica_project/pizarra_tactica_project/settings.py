@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os # Añadido para leer variables de entorno para la BD
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'pizarra_tactica_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_NAME'),       # Nombre de la BD
+        'USER': os.environ.get('POSTGRES_USER'),       # Usuario de la BD
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'), # Contraseña de la BD
+        'HOST': os.environ.get('DB_HOST'),             # Nombre del servicio 'db' en Docker Compose
+        'PORT': os.environ.get('DB_PORT', '5432'),     # Puerto de PostgreSQL (default 5432)
     }
 }
 
