@@ -15,3 +15,8 @@ export const registerUser = async (userData: any) => {
   const response = await api.post<User>('/register/', userData);
   return response.data;
 };
+
+export const getUserProfile = async (): Promise<User> => {
+  const response = await api.get<User>('/users/me/');
+  return response.data;
+};
