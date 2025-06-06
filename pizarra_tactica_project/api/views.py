@@ -34,6 +34,7 @@ class EquipoListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         user = self.request.user
+        print(f"[EquipoListCreateView] Intentando crear equipo. Usuario: {user}, Rol del usuario: {user.rol}, Email del usuario: {user.email}") # Log añadido
         if user.rol != 'entrenador':
             raise PermissionDenied("Solo los entrenadores pueden crear equipos.")
         if Equipo.objects.filter(entrenador_propietario=user).count() >= 1:

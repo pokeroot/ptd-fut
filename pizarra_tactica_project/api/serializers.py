@@ -11,14 +11,22 @@ class UsuarioSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name', 'rol')
         extra_kwargs = {'email': {'required': True}}
 
-
     def create(self, validated_data):
+        # --- INICIO DE LA SECCIÓN CORREGIDA ---
+        # Se extrae el 'rol' de los datos validados.
         rol_data = validated_data.pop('rol', None)
+        # Se crea el usuario usando el método 'create_user' del manager personalizado.
+        # Este método se encarga de hashear la contraseña automáticamente.
         user = Usuario.objects.create_user(**validated_data)
+        
+        # Si se proporcionó un rol en la solicitud, se asigna al usuario y se guarda.
         if rol_data:
             user.rol = rol_data
             user.save(update_fields=['rol'])
+        
+        # Se retorna el objeto de usuario creado.
         return user
+        # --- FIN DE LA SECCIÓN CORREGIDA ---
 
 class ComentarioSerializer(serializers.ModelSerializer):
     autor_username = serializers.ReadOnlyField(source='autor.username')
