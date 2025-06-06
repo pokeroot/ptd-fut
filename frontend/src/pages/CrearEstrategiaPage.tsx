@@ -242,7 +242,7 @@ const CrearEstrategiaPage: React.FC = () => {
     }
     const datosParaGuardar: EstrategiaData = { nombre: nombreParaGuardar, tipo_campo: campoSeleccionado.tipo, datos_estrategia: { elementos: elementos }, equipo: equipoEntrenador.id, };
     setIsLoading(true); setError(null); setMensaje(null);
-    try { const estrategiaGuardada = await guardarEstrategia(datosParaGuardar); setMensaje('Estrategia "\${estrategiaGuardada.nombre}" guardada!'); if (!estrategiaId) navigate('/crear-estrategia/\${estrategiaGuardada.id}', { replace: true }); fetchComentarios(estrategiaGuardada.id!); /* Recargar comentarios (nueva) */ }
+    try { const estrategiaGuardada = await guardarEstrategia(datosParaGuardar); setMensaje(`Estrategia "${estrategiaGuardada.nombre}" guardada!`); if (!estrategiaId) navigate(`/crear-estrategia/${estrategiaGuardada.id}`, { replace: true }); fetchComentarios(estrategiaGuardada.id!); /* Recargar comentarios (nueva) */ }
     catch (err: any) { setError(err.response?.data?.detail || 'Error guardando.'); } finally { setIsLoading(false); }
   };
 
@@ -294,7 +294,7 @@ const CrearEstrategiaPage: React.FC = () => {
 
   return (
     <div>
-      <h2>{isReadOnly ? 'Visualizando Estrategia: \${nombreEstrategia} ' : (estrategiaId ? 'Editando Estrategia: \${nombreEstrategia}' : "Crear Nueva Estrategia")}</h2>
+      <h2>{isReadOnly ? `Visualizando Estrategia: ${nombreEstrategia} ` : (estrategiaId ? `Editando Estrategia: ${nombreEstrategia}` : "Crear Nueva Estrategia")}</h2>
       {mensaje && <p style={{ color: 'green' }}>{mensaje}</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
